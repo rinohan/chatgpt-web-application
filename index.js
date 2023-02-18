@@ -35,9 +35,12 @@ app.post('/get-prompt-result', async (req, res) => {
         }
         const completion = await openai.createCompletion({
             model: model === 'gpt' ? "text-davinci-003" : 'code-davinci-002', // model name
-            prompt: `Please reply below question in markdown format.\n ${prompt}`, // input prompt
-            max_tokens: model === 'gpt' ? 4000 : 8000 // Use max 8000 tokens for codex model
+            prompt: `${prompt}`, // input prompt
+            stop: '_$$_',
+            max_tokens: model === 'gpt' ? 2000 : 8000 // Use max 8000 tokens for codex model
         });
+        console.log(prompt);
+        console.log(completion.data);
         // Send the generated text as the response
         return res.send(completion.data.choices[0].text);
     } catch (error) {

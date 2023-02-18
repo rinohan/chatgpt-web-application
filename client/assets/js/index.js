@@ -12,6 +12,8 @@ let isGeneratingResponse = false;
 
 let loadInterval = null;
 
+var conversionHistory = '';
+
 promptInput.addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
         event.preventDefault();
@@ -115,12 +117,16 @@ async function getGPTResult(_promptToRetry, _uniqueIdToRetry) {
     try {
         const model = modelSelect.value;
         // Send a POST request to the API with the prompt in the request body
+        let finalPrompt = prompt;
+        if (model != 'image') {
+            finalPrompt = conversionHistory + '\n' + prompt;
+        }
         const response = await fetch(API_URL + 'get-prompt-result', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                prompt,
-                model
+                prompt: finalPrompt,
+                model: model
             })
         });
         if (!response.ok) {
@@ -128,13 +134,15 @@ async function getGPTResult(_promptToRetry, _uniqueIdToRetry) {
             setErrorForResponse(responseElement, `HTTP Error: ${await response.text()}`);
             return;
         }
-        const responseText = await response.text();
+        let responseText = await response.text();
+        responseText = responseText.replace(/^？(\n+)?/,"").replace(/^\?(\n+)?/,"");
         if (model === 'image') {
             // Show image for `Create image` model
             responseElement.innerHTML = `<img src="${responseText}" class="ai-image" alt="generated image"/>`
         } else {
             // Set the response text
             responseElement.innerHTML = converter.makeHtml(responseText.trim());
+            conversionHistory = conversionHistory + '\n' + prompt + '\n' + responseText;
         }
 
         promptToRetry = null;

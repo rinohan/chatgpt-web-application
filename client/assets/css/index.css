@@ -96,7 +96,8 @@ select {
     padding: 10px;
     border-radius: 5px;
     min-height: 20px;
-    color: white;
+    color: rgba(252, 248, 0, 0.992);
+    background-color: darkgray;
     overflow: auto;
 }
 
