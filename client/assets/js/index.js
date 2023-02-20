@@ -146,7 +146,7 @@ async function getGPTResult(_promptToRetry, _uniqueIdToRetry) {
         }
 
         promptToRetry = null;
-        uniqueIdToRetry = null;
+        uniqueIdToRetry = null; 
         regenerateResponseButton.style.display = 'none';
         setTimeout(() => {
             // Scroll to the bottom of the response list

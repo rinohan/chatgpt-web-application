@@ -36,7 +36,10 @@ app.post('/get-prompt-result', async (req, res) => {
         const completion = await openai.createCompletion({
             model: model === 'gpt' ? "text-davinci-003" : 'code-davinci-002', // model name
             prompt: `${prompt}`, // input prompt
-            stop: '_$$_',
+            temperature: 0.7,
+            top_p:1,
+            frequency_penalty:0,
+            presence_penalty: 0,
             max_tokens: model === 'gpt' ? 2000 : 8000 // Use max 8000 tokens for codex model
         });
         console.log(prompt);
